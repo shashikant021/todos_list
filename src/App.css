@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* footer.css start  */
+
+footer{
+  position: absolute;
+  width: 100%;
+  top: 90vh;
+}
