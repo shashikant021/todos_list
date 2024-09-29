@@ -1,12 +1,22 @@
 import './App.css';
 import Header from './MyComponents/Header'
-import Footer from './MyComponents/Footer';
+// import Footer from './MyComponents/Footer';
 import Todos from './MyComponents/Todos';
-import { useState } from 'react';
+import AddTodo from './MyComponents/AddTodo';
+import { useEffect, useState } from 'react';
 
 function App() {
+  let initTodo;
+  if(localStorage.getItem("todos")===null){
+    initTodo = [];
+  }
+  else {
+    initTodo = JSON.parse(localStorage.getItem("todos"));
+  }
+
+
   const onDelete = (todo) => {
-    console.log("I am OnDelete todo", todo);
+    // console.log("I am OnDelete todo", todo);
 
     // this method is not use in react to delete
     // let index = todos.indexOf(todo);
@@ -15,32 +25,41 @@ function App() {
     setTodos(todos.filter((e) => {
       return e !== todo;
     }));
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
 
-  const [todos, setTodos] = useState([
-    {
-      sno: 1,
-      title: "list of rasan",
-      desc: "ghar "
-    },
-    {
-      sno: 1,
-      title: "list of rasan2",
-      desc: "ghar 2"
-    },
-    {
-      sno: 3,
-      title: "list of rasan3",
-      desc: "ghar1 "
+  const addTodo = (title, desc)=> {
+    // console.log("I am adding this todo:", title, desc);
+    let sno;
+    if(todos.length===0){
+     sno = 0;
     }
-  ]);
+    else{
+      sno = todos[todos.length-1].sno + 1;
+    }
+    
+    const myTodo = {
+      sno: sno,
+      title: title,
+      desc: desc,
+    }
+    setTodos([...todos, myTodo]);
+    // console.log(myTodo) 
+
+  };
+
+  const [todos, setTodos] = useState(initTodo);
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   return (
     <>
 
       <Header title="MyTodosList" />
+      <AddTodo addTodo={addTodo} />
       <Todos todos={todos} onDelete={onDelete} />
-      <Footer />
+      {/* <Footer /> */}
 
     </>
   );
